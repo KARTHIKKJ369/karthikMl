@@ -1,10 +1,28 @@
-# Python-generated files
+# Large model weights (do not commit to Git - exceeds GitHub 100MB limit)
+*.gguf
+*.safetensors
+*.bin
+checkpoints/karthik_qwen1.5b_fused/
+checkpoints/mlx_karthik_adapters_1.5b/
+data/
+
+# C++ Build artifacts
+build/
+bin/
+*.o
+*.a
+*.so
+*.dylib
+
+# Python & environments
 __pycache__/
 *.py[oc]
-build/
 dist/
 wheels/
 *.egg-info
+.venv/
+.pytest_cache/
 
-# Virtual environments
-.venv
+# OS artifacts
+.DS_Store
+Thumbs.db

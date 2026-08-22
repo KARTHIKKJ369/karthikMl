@@ -1,27 +1,20 @@
-# Ultra-lean CPU-optimized Dockerfile for Azure VM (Inference Only)
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Install curl for healthchecks
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# 1. Install lightweight CPU-only PyTorch (Only ~180MB instead of ~3GB Nvidia CUDA bloat)
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
-
-# 2. Install minimal production dependencies
-COPY requirements-prod.txt .
-RUN pip install --no-cache-dir -r requirements-prod.txt
-
-# 3. Copy standalone inference server & model checkpoints
-COPY serve.py .
-COPY checkpoints/ /app/checkpoints/
+# 100% Pure C++ Server for Karthik Jayan Portfolio SLM (Zero Python Runtime)
+FROM ghcr.io/ggerganov/llama.cpp:server
 
 EXPOSE 8000
 
-ENV PORTFOLIO_API_KEY="kj_live_sec_789f2a4b1c" \
-    PYTHONUNBUFFERED=1
+# Native C++ Server Runtime Configuration (Zero Python / Zero GIL)
+ENV LLAMA_ARG_MODEL=/models/karthik_qwen1.5b_q8.gguf \
+    LLAMA_ARG_HOST=0.0.0.0 \
+    LLAMA_ARG_PORT=8000 \
+    LLAMA_ARG_CTX_SIZE=2048 \
+    LLAMA_ARG_THREADS=2 \
+    LLAMA_ARG_API_KEY=kj_live_sec_789f2a4b1c \
+    LLAMA_ARG_ALIAS=karthik-qwen2.5-1.5b \
+    LLAMA_ARG_METRICS=1 \
+    LLAMA_ARG_CONT_BATCHING=1
 
-CMD ["uvicorn", "serve:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+ENTRYPOINT ["/llama-server"]
