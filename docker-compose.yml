@@ -1,14 +1,15 @@
 services:
-  portfolio-ai-api:
+  portfolio-ai:
     build: .
     container_name: karthik-portfolio-ai
-    restart: always
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
-      - PORTFOLIO_API_KEY=kj_live_sec_789f2a4b1c
+      - PORTFOLIO_API_KEY=${PORTFOLIO_API_KEY:-kj_live_sec_789f2a4b1c}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
+      start_period: 10s
