@@ -7,18 +7,12 @@ services:
       - "8000:8000"
     volumes:
       - ./checkpoints:/models
-    environment:
-      - LLAMA_ARG_MODEL=/models/karthik_qwen1.5b_q8.gguf
-      - LLAMA_ARG_HOST=0.0.0.0
-      - LLAMA_ARG_PORT=8000
-      - LLAMA_ARG_CTX_SIZE=2048
-      - LLAMA_ARG_THREADS=2
-      - LLAMA_ARG_API_KEY=${PORTFOLIO_API_KEY:-kj_live_sec_789f2a4b1c}
-      - LLAMA_ARG_ALIAS=karthik-qwen2.5-1.5b
-      - LLAMA_ARG_METRICS=1
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
+    command: >
+      -m /models/karthik_qwen1.5b_q8.gguf
+      --host 0.0.0.0
+      --port 8000
+      -c 2048
+      -t 2
+      --api-key ${PORTFOLIO_API_KEY:-kj_live_sec_789f2a4b1c}
+      --alias karthik-qwen2.5-1.5b
+      --metrics
