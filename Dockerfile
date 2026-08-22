@@ -1,5 +1,5 @@
 # 100% Pure C++ Server for Karthik Jayan Portfolio SLM (Zero Python Runtime)
-FROM ghcr.io/ggerganov/llama.cpp:server
+FROM ghcr.io/ggml-org/llama.cpp:server
 
 EXPOSE 8000
 

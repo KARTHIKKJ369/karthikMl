@@ -1,6 +1,6 @@
 services:
   portfolio-ai:
-    build: .
+    image: ghcr.io/ggml-org/llama.cpp:server
     container_name: karthik-portfolio-ai
     restart: unless-stopped
     ports:
