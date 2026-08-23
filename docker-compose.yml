@@ -7,12 +7,23 @@ services:
       - "8000:8000"
     volumes:
       - ./checkpoints:/models
+    deploy:
+      resources:
+        limits:
+          cpus: '1.4'
+          memory: 1500M
     command: >
-      -m /models/karthik_qwen1.5b_q8.gguf
+      -m /models/karthik_qwen1.5b_q4_k_m.gguf
       --host 0.0.0.0
       --port 8000
-      -c 2048
+      -c 1024
+      -n 250
+      -np 1
+      -b 256
+      --ubatch-size 128
       -t 2
+      --threads-http 1
+      --poll 0
       --api-key ${PORTFOLIO_API_KEY:-kj_live_sec_789f2a4b1c}
       --alias karthik-qwen2.5-1.5b
       --metrics
